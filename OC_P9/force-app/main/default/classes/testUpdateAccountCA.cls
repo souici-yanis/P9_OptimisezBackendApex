@@ -7,7 +7,7 @@ private class testUpdateAccountCA {
         insert acc1;
 
         Product2 pd1 = new Product2(Name = 'Chemise Verte longue XYX', Family = 'Chemise');
-        Insert pd1;
+        insert pd1;
  
         //Create the PricebookEntry
         PricebookEntry pbe = new PricebookEntry(
@@ -16,7 +16,7 @@ private class testUpdateAccountCA {
             UnitPrice = 1020,
             IsActive = true
         );
-        Insert pbe;
+        insert pbe;
 
         Order o1 = new Order(AccountId = acc1.Id);
         insert o1;
