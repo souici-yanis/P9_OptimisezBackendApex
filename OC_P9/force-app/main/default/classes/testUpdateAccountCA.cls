@@ -1,6 +1,8 @@
 @isTest
 private class testUpdateAccountCA {
-    @isTest static void test() {
+
+    @isTest 
+    static void testUpdateCA() {
         Account acc1 = new Account(Name = 'Test Account 1');
         insert acc1;
 
@@ -20,8 +22,12 @@ private class testUpdateAccountCA {
         insert o1;
 
         OrderItem oi1 = new OrderItemItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=10, UnitPrice = 150);
-        insert oi1;
         OrderItem oi2 = new OrderItemItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=20, UnitPrice = 1000);
-        insert oi2;        
+        List<OrderItem> orderItems = {oi1, oi2};
+        insert orderItems;   
+
+        Account acc = [SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Name ='Test Account 1' LIMIT 1];
+        System.assertEquals(acc.Chiffre_d_affaire__c, 21500);
     }
+
 }
