@@ -21,10 +21,10 @@ private class testUpdateAccountCA {
         Order o1 = new Order(AccountId = acc1.Id);
         insert o1;
 
-        OrderItem oi1 = new OrderItemItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=10, UnitPrice = 150);
-        OrderItem oi2 = new OrderItemItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=20, UnitPrice = 1000);
-        List<OrderItem> orderItems = {oi1, oi2};
-        insert orderItems;   
+        OrderItem oi1 = new OrderItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=10, UnitPrice = 150);
+        OrderItem oi2 = new OrderItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=20, UnitPrice = 1000);
+        insert oi1;   
+        insert oi1;   
 
         Account acc = [SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Name ='Test Account 1' LIMIT 1];
         System.assertEquals(acc.Chiffre_d_affaire__c, 21500);
