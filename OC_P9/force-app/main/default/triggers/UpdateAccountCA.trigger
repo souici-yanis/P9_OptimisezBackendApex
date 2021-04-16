@@ -1,14 +1,17 @@
 trigger UpdateAccountCA on Order (after update) {
-	
-    set<Id> setAccountIds = new set<Id>();
-    
-    for(integer i=0; i< trigger.new.size(); i++){
-        Order newOrder= trigger.new[i];
-        Account accounts = [SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Id =:newOrder.AccountId ];
-        
-        acc.Chiffre_d_affaire__c = acc.Chiffre_d_affaire__c + newOrder.TotalAmount;
-        
-        setAccountsIds.push(acc);
+    Map<ID, Account> parentAccts = new Map<ID, Account>(); 
+    List<Id> listAccIds = new List<Id>();
+
+    for (Order oi : Trigger.new) {
+        listAccIds.add(oi.AccountId);
     }
-    update acc;
+
+    parentAccts = new Map<Id, Account>([SELECT Id, Chiffre_d_affaire__c, (SELECT ID, TotalAmount FROM Orders) FROM Account WHERE ID IN :listAccIds]);
+
+    for (Contact con: Trigger.new){
+        Account myParentAcc = parentAccts.get(con.AccountId);
+        myParentAcc.Chiffre_d_affaire__c = myParentAcc.Chiffre_d_affaire__c + con.TotalAmount;
+    }
+
+    update parentAccts.values();
 }
