@@ -1,8 +1,8 @@
 @isTest
 private class testUpdateAccountCA {
 
-    @isTest 
-    static void testUpdateCA() {
+    //TEST SETUP 
+    @testSetup static void setup() {
         Account acc1 = new Account(Name = 'Test Account 1');
         insert acc1;
 
@@ -18,16 +18,27 @@ private class testUpdateAccountCA {
         );
         insert pbe;
 
-        Order o1 = new Order(AccountId = acc1.Id);
+        Date todayDate = Date.today(); 
+        Order o1 = new Order(AccountId = acc1.Id, Pricebook2Id  = pbe.Pricebook2Id, Status='Draft', EffectiveDate=todayDate);
         insert o1;
-
+        
         OrderItem oi1 = new OrderItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=10, UnitPrice = 150);
         OrderItem oi2 = new OrderItem (OrderId = o1.Id, PricebookEntryId = pbe.Id, Quantity=20, UnitPrice = 1000);
         insert oi1;   
-        insert oi1;   
-
-        Account acc = [SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Name ='Test Account 1' LIMIT 1];
-        System.assertEquals(acc.Chiffre_d_affaire__c, 21500);
+        insert oi2;   
     }
 
+    @isTest 
+    static void testUpdateCA() {
+        Account acc = [SELECT Id, Chiffre_d_affaire__c FROM Account WHERE Name ='Test Account 1' LIMIT 1];
+        System.assertNotEquals(acc.Chiffre_d_affaire__c, 21500, 'Chiffre affaire incorrecte');
+
+        Order o1 = [SELECT Id, Status FROM Order WHERE AccountId = :acc.Id LIMIT 1];
+        o1.Status = 'Ordered';
+        update o1;
+        
+        Account accAfterOrder = [SELECT Id, (Select Status FROM Orders), Chiffre_d_affaire__c FROM Account WHERE Name ='Test Account 1' LIMIT 1];
+        System.assertEquals(accAfterOrder.Chiffre_d_affaire__c, 21500, 'Chiffre affaire incorrecte');
+    }
 }
+
