@@ -1,7 +1,19 @@
-<apex:page controller="VFC01_Team" >
+<apex:page controller="MyTeamOrdersController" >
     <div>
         <h1>
-            Sum of my team orders: <apex:outputText value="{!SumOders}" />
+            List des commandes par commerciaux
+            <br/> <br/> <br/>
+            <apex:repeat value="{!SumOrders}" var="string" id="theRepeat">
+                
+                Commercial : 
+                <apex:outputText value="{!string['ownerName']}" id="createdName"/><br/>
+                
+                Chiffre d'affaire : 
+                <apex:outputText value="{!string['total']}" id="totalAmount"/>
+                €
+                
+                <br/> <br/> <br/>
+            </apex:repeat>	
         </h1>
     </div>
 </apex:page>
