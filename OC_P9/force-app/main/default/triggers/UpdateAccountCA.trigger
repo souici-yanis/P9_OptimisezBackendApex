@@ -8,6 +8,10 @@ trigger UpdateAccountCA on Order (after update) {
 
     parentAccts = new Map<Id, Account>([SELECT Id, Chiffre_d_affaire__c, (SELECT ID, TotalAmount FROM Orders) FROM Account WHERE ID IN :listAccIds]);
 
+    for (Account acc: parentAccts.values()){
+        acc.Chiffre_d_affaire__c = 0;
+    }
+
     for (Order con: Trigger.new){
         Account myParentAcc = parentAccts.get(con.AccountId);
         myParentAcc.Chiffre_d_affaire__c = myParentAcc.Chiffre_d_affaire__c + con.TotalAmount;
